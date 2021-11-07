@@ -28,4 +28,4 @@ resource/ chứa các file dữ liệu, config các thứ, không được commi
 
 tools/ chứa các tool như crawl dữ liệu, post data tới solr
 
-server/ chứa webserver nodejs, html, css, js
+src/main/resources/static/ chứa code frontend html, css, js
