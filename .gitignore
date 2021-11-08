@@ -1,6 +1,8 @@
 # custom
 resource/*
 !resource/README.md
+.idea/
+.mvn/
 
 # Compiled class file
 *.class
