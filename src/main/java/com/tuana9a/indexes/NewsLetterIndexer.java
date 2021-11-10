@@ -1,7 +1,10 @@
+package com.tuana9a.indexes;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tuana9a.entities.NewsLetter;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import lombok.Setter;
+import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.TextField;
@@ -16,30 +19,32 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
-import org.apache.lucene.store.RAMDirectory;
-import org.junit.Test;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class StackOverFlowSearchEngineApplicationTests {
-    @Test
-    public void test() throws IOException, ParseException {
-        String filePath = "resource/data1.json";
+@Setter
+@Component
+public class NewsLetterIndexer {
+    private Analyzer analyzer;
+    private Directory directory;
 
-        Directory memoryIndex = new RAMDirectory();
-        StandardAnalyzer analyzer = new StandardAnalyzer();
+    public NewsLetterIndexer() {
+
+    }
+
+    public void indexFromFile(String filePath) throws IOException {
         IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
-        IndexWriter indexWriter = new IndexWriter(memoryIndex, indexWriterConfig);
+        IndexWriter indexWriter = new IndexWriter(directory, indexWriterConfig);
         List<NewsLetter> newsLetters = new ObjectMapper().readValue(new File(filePath), new TypeReference<List<NewsLetter>>() {
         });
 
         newsLetters.forEach(newsLetter -> {
             try {
-//                System.out.println(newsLetter.getUrl());
-//                System.out.println(newsLetter.getTitle());
                 Document document = new Document();
                 document.add(new TextField("url", newsLetter.getUrl(), Field.Store.YES));
                 document.add(new TextField("title", newsLetter.getTitle(), Field.Store.YES));
@@ -51,17 +56,24 @@ public class StackOverFlowSearchEngineApplicationTests {
         });
 
         indexWriter.close();
+    }
 
-        Query query = new QueryParser("content", analyzer)
-                .parse("html");
+    public List<NewsLetter> search(String field, String q, Integer limit) throws ParseException, IOException {
+        Query query = new QueryParser(field, analyzer)
+                .parse(q);
 
-        IndexReader indexReader = DirectoryReader.open(memoryIndex);
+        IndexReader indexReader = DirectoryReader.open(directory);
         IndexSearcher searcher = new IndexSearcher(indexReader);
-        TopDocs topDocs = searcher.search(query, 10);
+        TopDocs topDocs = searcher.search(query, limit);
         List<Document> documents = new ArrayList<>();
         for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
             documents.add(searcher.doc(scoreDoc.doc));
         }
-        documents.forEach(x -> System.out.println("q=" + x.get("url")));
+
+        return documents.stream()
+                .map(fields -> NewsLetter.builder().url(fields.get("url"))
+                        .content(fields.get("content")).title(fields.get("title")).build())
+                .collect(Collectors.toList());
     }
+
 }

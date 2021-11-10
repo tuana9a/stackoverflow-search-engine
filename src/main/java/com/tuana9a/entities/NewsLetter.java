@@ -9,8 +9,8 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class Record {
-    private String title;
+public class NewsLetter {
     private String url;
+    private String title;
     private String content;
 }

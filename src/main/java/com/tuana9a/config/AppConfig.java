@@ -5,6 +5,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AppConfig {
-    @Value("${custom.name}")
-    public String CUSTOM_NAME;
+    @Value("${lucene.indexes.dir}")
+    public String LUCENE_INDEXES_DIR;
 }
