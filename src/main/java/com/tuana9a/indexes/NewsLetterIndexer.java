@@ -36,7 +36,7 @@ public class NewsLetterIndexer {
 
     }
 
-    public void index(List<NewsLetter> newsLetters) throws IOException {
+    public int index(List<NewsLetter> newsLetters) throws IOException {
         IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
         IndexWriter indexWriter = new IndexWriter(directory, indexWriterConfig);
 
@@ -51,8 +51,9 @@ public class NewsLetterIndexer {
                 e.printStackTrace();
             }
         });
-
+        int numIndexed = indexWriter.maxDoc();
         indexWriter.close();
+        return numIndexed;
     }
 
     public List<NewsLetter> search(String field, String q, Integer limit) throws ParseException, IOException {

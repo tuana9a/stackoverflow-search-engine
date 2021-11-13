@@ -24,8 +24,8 @@ public class NewsLetterController {
 
     @PostMapping("/index")
     public ResponseEntity<Object> search(@RequestBody List<NewsLetter> newsLetters) throws IOException {
-        newsLetterIndexer.index(newsLetters);
-        return ResponseEntity.ok().build();
+        Object result = newsLetterIndexer.index(newsLetters);
+        return ResponseEntity.ok().body(result);
     }
 
 }
