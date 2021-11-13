@@ -31,11 +31,9 @@ public class StackOverFlowSearchEngineApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws IOException {
-        Directory directory = FSDirectory.open(Paths.get(config.LUCENE_INDEXES_DIR)); // new RAMDirectory();
         Analyzer analyzer = new StandardAnalyzer();
         indexer.setAnalyzer(analyzer);
+        Directory directory = FSDirectory.open(Paths.get(config.LUCENE_INDEXES_DIR)); // new RAMDirectory();
         indexer.setDirectory(directory);
-        indexer.indexFromFile("data/data1.json");
-        indexer.indexFromFile("data/data2.json");
     }
 }

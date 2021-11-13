@@ -20,7 +20,7 @@ với linux lệnh sẽ khác xíu
 
 `source .venv/bin/activate`
 
-sau đó cài các lib như scrapy, pysolr
+sau đó cài các lib như scrapy
 
 # structure
 
@@ -31,3 +31,25 @@ cấu trúc thư mục như sau
 `tools/` chứa các tool như crawl dữ liệu, post data tới solr
 
 `src/main/resources/static/` code web frontend html, css, js
+
+`index` là thư mục chứa index được sinh ra bởi lucene
+
+# changelog + notes
+
+13/11/2021: @tuana9a đã update lại các api url với dạng như sau
+
+GET http://localhost/api/newsletter/search?field=content&limit=1&q=code
+
+
+
+cái này để search, gồm các tham số
+- field: trường muốn search VD: content, url, tittle
+- limit: giới hạn số bản ghi trả về (top K trong lý thuyết)
+- q: là câu truy vấn
+
+POST http://localhost/api/newsletter/index
+
+cái url này để POST dữ liệu để tạo index (xem tools/create_index.py)
+
+
+
