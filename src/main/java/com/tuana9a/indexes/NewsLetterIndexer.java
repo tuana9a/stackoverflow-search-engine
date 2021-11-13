@@ -21,7 +21,6 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,11 +36,9 @@ public class NewsLetterIndexer {
 
     }
 
-    public void indexFromFile(String filePath) throws IOException {
+    public int index(List<NewsLetter> newsLetters) throws IOException {
         IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
         IndexWriter indexWriter = new IndexWriter(directory, indexWriterConfig);
-        List<NewsLetter> newsLetters = new ObjectMapper().readValue(new File(filePath), new TypeReference<List<NewsLetter>>() {
-        });
 
         newsLetters.forEach(newsLetter -> {
             try {
@@ -54,8 +51,9 @@ public class NewsLetterIndexer {
                 e.printStackTrace();
             }
         });
-
+        int numIndexed = indexWriter.maxDoc();
         indexWriter.close();
+        return numIndexed;
     }
 
     public List<NewsLetter> search(String field, String q, Integer limit) throws ParseException, IOException {
