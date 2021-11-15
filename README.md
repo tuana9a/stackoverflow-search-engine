@@ -54,36 +54,18 @@ cái url này để POST dữ liệu để tạo index (xem tools/create_index.p
 
 Link Tham Khảo
 
-<a href="https://alibaba-cloud.medium.com/analysis-of-lucene-basic-concepts-5ff5d8b90a53">https://alibaba-cloud.medium.com/analysis-of-lucene-basic-concepts-5ff5d8b90a53</a>
+[Analysis of Lucene Basic Concepts](https://alibaba-cloud.medium.com/analysis-of-lucene-basic-concepts-5ff5d8b90a53)
 
-<a href="https://stackoverflow.com/a/43203339/10459230">https://stackoverflow.com/a/43203339/10459230</a>
+[https://stackoverflow.com/a/43203339/10459230](https://stackoverflow.com/a/43203339/10459230)
 
-<a href="https://lucene.apache.org/core/7_7_3/index.html">https://lucene.apache.org/core/7_7_3/index.html</a>
+[https://lucene.apache.org/core/7_7_3/index.html](https://lucene.apache.org/core/7_7_3/index.html)
 
-<a href="https://lucene.apache.org/core/7_7_3/core/org/apache/lucene/analysis/package-summary.html#package.description"> analysis </a>
+[org.apache.lucene.analysis](https://lucene.apache.org/core/7_7_3/core/org/apache/lucene/analysis/package-summary.html#package.description)
 
-<a href="https://en.wikipedia.org/wiki/Skip_list#Indexable_skiplist">Skip_list#Indexable_skiplist</a>
+[https://en.wikipedia.org/wiki/Skip_list#Indexable_skiplist](https://en.wikipedia.org/wiki/Skip_list#Indexable_skiplist)
 
-Using Finite State Transducers in Lucene
+[Using Finite State Transducers in Lucene](https://blog.mikemccandless.com/2010/12/using-finite-state-transducers-in.html)
 
-<a href="https://blog.mikemccandless.com/2010/12/using-finite-state-transducers-in.html">https://blog.mikemccandless.com/2010/12/using-finite-state-transducers-in.html</a>
+[Lucene File Format 8.10.1](https://lucene.apache.org/core/8_10_1/core/org/apache/lucene/codecs/lucene87/package-summary.html#package.description)
 
-Lucene File Format
-
-<a href="https://lucene.apache.org/core/8_10_1/core/org/apache/lucene/codecs/lucene87/package-summary.html#package.description">file format 8.10.1</a>
-
-<a href="https://lucene.apache.org/core/7_7_3/core/org/apache/lucene/codecs/lucene70/package-summary.html#package.description">file format 7.7.3</a>
-
-<h2>note tay</h2>
-
-// tìm kiếm thông tin
-
-index writer có nhiệm vụ ghi index (chính)
-
-directory là một abstract lưu index, index writer sẽ ghi index vào directory
-
-directory lưu index thành các sub-indexs, tạo thành segments
-
-một term là một cặp: field_name + token (token có thể là từ)
-
-
+[Lucene File Format 7.7.3](https://lucene.apache.org/core/7_7_3/core/org/apache/lucene/codecs/lucene70/package-summary.html#package.description)
