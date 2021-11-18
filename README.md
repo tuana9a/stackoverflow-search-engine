@@ -1,6 +1,7 @@
 # info
 
-sử dụng thư viện mã nguồn mở lucence đánh chỉ mục tìm kiếm các blog, newsletter trên trang web [stackverflow](https://stackoverflow.blog/newsletter/)
+sử dụng thư viện mã nguồn mở lucence đánh chỉ mục tìm kiếm các blog, newsletter trên trang
+web [stackverflow](https://stackoverflow.blog/newsletter/)
 
 # prepare
 
@@ -22,50 +23,38 @@ với linux lệnh sẽ khác xíu
 
 sau đó cài các lib như scrapy
 
+với java thì hỏi trực tiếp vì nó nhiều
+
 # structure
 
 cấu trúc thư mục như sau
 
-`resource/` chứa các file dữ liệu, config các thứ, không được commit lên github
+`data/` chứa các file dữ liệu cho việc đánh index
 
-`tools/` chứa các tool như crawl dữ liệu, post data tới solr
+`tools/` chứa các tool như crawl dữ liệu, post data tới server
 
 `src/main/resources/static/` code web frontend html, css, js
 
-`index` là thư mục chứa index được sinh ra bởi lucene
+`index` là thư mục chứa index được sinh ra bởi lucene không cần thêm
 
-# changelog + notes
+# reference
 
-13/11/2021: @tuana9a đã update lại các api url với dạng như sau
+<https://alibaba-cloud.medium.com/analysis-of-lucene-basic-concepts-5ff5d8b90a53>
 
-GET http://localhost/api/newsletter/search?field=content&limit=1&q=code
+<https://stackoverflow.com/a/43203339/10459230>
 
-cái này để search, gồm các tham số
-
--   field: trường muốn search VD: content, url, tittle
--   limit: giới hạn số bản ghi trả về (top K trong lý thuyết)
--   q: là câu truy vấn
-
-POST http://localhost/api/newsletter/index
-
-cái url này để POST dữ liệu để tạo index (xem tools/create_index.py)
-
-# note
-
-Link Tham Khảo
-
-[Analysis of Lucene Basic Concepts](https://alibaba-cloud.medium.com/analysis-of-lucene-basic-concepts-5ff5d8b90a53)
-
-[https://stackoverflow.com/a/43203339/10459230](https://stackoverflow.com/a/43203339/10459230)
-
-[https://lucene.apache.org/core/7_7_3/index.html](https://lucene.apache.org/core/7_7_3/index.html)
+<https://lucene.apache.org/core/7_7_3/index.html>
 
 [org.apache.lucene.analysis](https://lucene.apache.org/core/7_7_3/core/org/apache/lucene/analysis/package-summary.html#package.description)
 
-[https://en.wikipedia.org/wiki/Skip_list#Indexable_skiplist](https://en.wikipedia.org/wiki/Skip_list#Indexable_skiplist)
+<https://en.wikipedia.org/wiki/Skip_list#Indexable_skiplist>
 
 [Using Finite State Transducers in Lucene](https://blog.mikemccandless.com/2010/12/using-finite-state-transducers-in.html)
 
 [Lucene File Format 8.10.1](https://lucene.apache.org/core/8_10_1/core/org/apache/lucene/codecs/lucene87/package-summary.html#package.description)
 
 [Lucene File Format 7.7.3](https://lucene.apache.org/core/7_7_3/core/org/apache/lucene/codecs/lucene70/package-summary.html#package.description)
+
+<https://en.wikipedia.org/wiki/Log-structured_merge-tree>
+
+[https://yetanotherdevblog.com/lsm/](https://yetanotherdevblog.com/lsm/)
