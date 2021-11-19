@@ -15,4 +15,5 @@ url = "http://localhost/api/newsletter/index"
 for filepath in files:
     f = open(filepath, encoding="UTF-8")
     records = json.load(f)
-    requests.post(url=url, json=records)
+    resp = requests.post(url=url, json=records)
+    print(resp.json())

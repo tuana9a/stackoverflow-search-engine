@@ -28,4 +28,10 @@ public class NewsLetterController {
         return ResponseEntity.ok().body(result);
     }
 
+    @DeleteMapping("/index")
+    public ResponseEntity<Object> clear() throws IOException {
+        Object result = newsLetterIndexer.clear();
+        return ResponseEntity.ok().body(result);
+    }
+
 }

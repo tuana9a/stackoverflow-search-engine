@@ -74,4 +74,13 @@ public class NewsLetterIndexer {
                 .collect(Collectors.toList());
     }
 
+    public long clear() throws IOException {
+        IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
+        IndexWriter indexWriter = new IndexWriter(directory, indexWriterConfig);
+        long count = indexWriter.deleteAll();
+        indexWriter.commit();
+        indexWriter.close();
+        return count;
+    }
+
 }
