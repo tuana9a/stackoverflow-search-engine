@@ -37,8 +37,8 @@ public class NewsLetterIndexer {
     }
 
     public int index(List<NewsLetter> newsLetters) throws IOException {
-        IndexWriterConfig indexWriterConfig = new IndexWriterConfig(analyzer);
-        IndexWriter indexWriter = new IndexWriter(directory, indexWriterConfig);
+        IndexWriterConfig conf = new IndexWriterConfig(analyzer);
+        IndexWriter indexWriter = new IndexWriter(directory, conf);
 
         newsLetters.forEach(newsLetter -> {
             try {
@@ -56,21 +56,22 @@ public class NewsLetterIndexer {
         return numIndexed;
     }
 
-    public List<NewsLetter> search(String field, String q, Integer limit) throws ParseException, IOException {
+    public List<NewsLetter> search(String field, String q, Integer top) throws ParseException, IOException {
         Query query = new QueryParser(field, analyzer)
                 .parse(q);
 
         IndexReader indexReader = DirectoryReader.open(directory);
         IndexSearcher searcher = new IndexSearcher(indexReader);
-        TopDocs topDocs = searcher.search(query, limit);
+        TopDocs topDocs = searcher.search(query, top);
         List<Document> documents = new ArrayList<>();
         for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
             documents.add(searcher.doc(scoreDoc.doc));
         }
 
-        return documents.stream()
-                .map(fields -> NewsLetter.builder().url(fields.get("url"))
-                        .content(fields.get("content")).title(fields.get("title")).build())
+        return documents.stream().map(fields -> NewsLetter.builder()
+                        .url(fields.get("url"))
+                        .content(fields.get("content"))
+                        .title(fields.get("title")).build())
                 .collect(Collectors.toList());
     }
 

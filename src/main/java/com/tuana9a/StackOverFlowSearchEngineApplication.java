@@ -3,7 +3,7 @@ package com.tuana9a;
 import com.tuana9a.config.AppConfig;
 import com.tuana9a.indexes.NewsLetterIndexer;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
@@ -31,9 +31,10 @@ public class StackOverFlowSearchEngineApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws IOException {
-        Analyzer analyzer = new StandardAnalyzer();
+        Analyzer analyzer = new EnglishAnalyzer();
+        Directory dir = FSDirectory.open(Paths.get(config.LUCENE_INDEXES_DIR));
+        Directory ram = new RAMDirectory();
         indexer.setAnalyzer(analyzer);
-        Directory directory = FSDirectory.open(Paths.get(config.LUCENE_INDEXES_DIR)); // new RAMDirectory();
-        indexer.setDirectory(directory);
+        indexer.setDirectory(dir);
     }
 }

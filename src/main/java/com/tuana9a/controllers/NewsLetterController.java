@@ -18,8 +18,11 @@ public class NewsLetterController {
     private NewsLetterIndexer newsLetterIndexer;
 
     @GetMapping("/search")
-    public ResponseEntity<Object> search(@RequestParam("field") String field, @RequestParam("q") String q, @RequestParam("limit") Integer limit) throws ParseException, IOException {
-        return ResponseEntity.ok().body(newsLetterIndexer.search(field, q, limit));
+    public ResponseEntity<Object> search(
+            @RequestParam("field") String field,
+            @RequestParam("top") Integer top,
+            @RequestParam("q") String q) throws ParseException, IOException {
+        return ResponseEntity.ok().body(newsLetterIndexer.search(field, q, top));
     }
 
     @PostMapping("/index")
