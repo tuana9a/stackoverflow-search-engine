@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component;
 @Component
 public class AppConfig {
     @Value("${lucene.indexes.dir}")
-    public String LUCENE_INDEXES_DIR;
+    public static String LUCENE_INDEXES_DIR;
 }
