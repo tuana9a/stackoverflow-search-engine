@@ -14,5 +14,5 @@ public interface SeachEngineService {
     public Directory getDirectory() throws IOException;
     public EnglishAnalyzer getAnalyzer();
     public void addDocuments(File file, boolean create) throws IOException;
-    public List<Result> searchDocument(String keyword) throws IOException, ParseException;
+    public List<Result> searchDocument(String keyword, int limit) throws IOException, ParseException;
 }

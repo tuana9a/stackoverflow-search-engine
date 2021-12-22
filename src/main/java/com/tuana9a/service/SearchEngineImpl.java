@@ -6,7 +6,6 @@ import com.tuana9a.config.AppConfig;
 import com.tuana9a.entities.NewsLetter;
 import com.tuana9a.entities.Result;
 import lombok.AllArgsConstructor;
-import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -26,7 +25,6 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.apache.lucene.store.RAMDirectory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -80,16 +78,17 @@ public class SearchEngineImpl implements SeachEngineService{
     }
 
     @Override
-    public List<Result> searchDocument(String keyword) throws IOException, ParseException {
+    public List<Result> searchDocument(String keyword, int limit) throws IOException, ParseException {
         DirectoryReader ireader = DirectoryReader.open(getDirectory());
         IndexSearcher isearcher = new IndexSearcher(ireader);
 
         EnglishAnalyzer analyzer = getAnalyzer();
         MultiFieldQueryParser parsers = new MultiFieldQueryParser(new String[]{"content","title"}, analyzer);
         parsers.setDefaultOperator(QueryParser.Operator.OR);
+
         Query query = parsers.parse(keyword);
 
-        ScoreDoc[] hits = isearcher.search(query, 100).scoreDocs;
+        ScoreDoc[] hits = isearcher.search(query, limit).scoreDocs;
 
         List<Result> results = new ArrayList<>();
 
@@ -97,8 +96,11 @@ public class SearchEngineImpl implements SeachEngineService{
             Result result = new Result();
             Document hitDoc = isearcher.doc(hits[i].doc);
             result.setDocument(hitDoc);
+
             TokenStream tokenStream = analyzer.tokenStream("content", hitDoc.get("content"));
+
             CharTermAttribute charTermAttribute = tokenStream.addAttribute(CharTermAttribute.class);
+
             String tokenizedString = new String();
             try{
                 tokenStream.reset();
