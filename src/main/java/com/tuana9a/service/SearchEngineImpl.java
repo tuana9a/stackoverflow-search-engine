@@ -19,7 +19,6 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
@@ -35,7 +34,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class SearchEngineImpl implements SeachEngineService{
+public class SearchEngineImpl implements SearchEngineService {
 
     @Override
     public Directory getDirectory() throws IOException {
@@ -93,9 +92,8 @@ public class SearchEngineImpl implements SeachEngineService{
         List<Result> results = new ArrayList<>();
 
         for(int i = 0; i < hits.length; i++){
-            Result result = new Result();
             Document hitDoc = isearcher.doc(hits[i].doc);
-            result.setDocument(hitDoc);
+            Result result = new Result(hitDoc);
 
             TokenStream tokenStream = analyzer.tokenStream("content", hitDoc.get("content"));
 

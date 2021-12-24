@@ -9,6 +9,13 @@ import org.apache.lucene.document.Document;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Result {
-    Document document;
+    String title;
+    String link;
+    String content;
     String tokenizedString;
+    public Result(Document document){
+        this.title = document.get("title");
+        this.link = document.get("link");
+        this.content = document.get("content");
+    }
 }

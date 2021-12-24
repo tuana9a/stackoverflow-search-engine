@@ -1,6 +1,8 @@
 package com.tuana9a.controllers;
 
 import com.tuana9a.indexes.NewsLetterIndexer;
+import com.tuana9a.service.SearchEngineService;
+import lombok.AllArgsConstructor;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,14 +15,13 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/search")
+@AllArgsConstructor
 public class NewsLetterSearchController {
-
-    @Autowired
-    private NewsLetterIndexer newsLetterIndexer;
+    SearchEngineService searchEngineService;
 
     @GetMapping
-    public ResponseEntity<Object> search(@RequestParam("field") String field, @RequestParam("q") String q, @RequestParam("limit") Integer limit) throws ParseException, IOException {
-        return ResponseEntity.ok().body(newsLetterIndexer.search(field, q, limit));
+    public ResponseEntity<Object> search(@RequestParam("q") String q, @RequestParam("limit") Integer limit) throws ParseException, IOException {
+        return ResponseEntity.ok(searchEngineService.searchDocument(q, limit));
     }
 
 }
