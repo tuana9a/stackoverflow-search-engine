@@ -103,9 +103,11 @@ public class SearchEngineImpl implements SearchEngineService {
             try{
                 tokenStream.reset();
                 while(tokenStream.incrementToken()){
-                    String term = charTermAttribute.toString();
-                    long termFrequency = ireader.totalTermFreq(new Term("content", term));
-                    tokenizedString+= " [" + term + " " + termFrequency + "]";
+                    String word = charTermAttribute.toString();
+                    Term term = new Term("content", word);
+                    long termFrequency = ireader.totalTermFreq(term);
+                    long docFrequency = ireader.docFreq(term);
+                    tokenizedString+= " [" + term + " " + termFrequency + " " +docFrequency+ "]";
                 }
                 System.out.println();
                 tokenStream.end();
