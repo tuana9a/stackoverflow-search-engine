@@ -24,6 +24,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -36,9 +37,12 @@ import java.util.List;
 @AllArgsConstructor
 public class SearchEngineImpl implements SearchEngineService {
 
+    @Autowired
+    private AppConfig config;
+
     @Override
     public Directory getDirectory() throws IOException {
-        return FSDirectory.open(Paths.get(AppConfig.LUCENE_INDEXES_DIR));
+        return FSDirectory.open(Paths.get(config.LUCENE_INDEXES_DIR));
     }
 
     @Override

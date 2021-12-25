@@ -1,10 +1,8 @@
 package com.tuana9a.controllers;
 
-import com.tuana9a.indexes.NewsLetterIndexer;
 import com.tuana9a.service.SearchEngineService;
 import lombok.AllArgsConstructor;
 import org.apache.lucene.queryparser.classic.ParseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
