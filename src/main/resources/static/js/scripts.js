@@ -96,15 +96,21 @@ function httpGetAsync(theUrl, callback) {
     xmlHttp.send(null);
 }
 
+document.getElementById("search-form").addEventListener("submit", (e) => {
+    e.preventDefault();
+    searchRequest();
+})
+
 async function searchRequest() {
-    showResult(data, 4);
     // query = document.getElementById("query").value;
     // url = "http://localhost/api/newsletter/search?field=content&top=3&q=" + query;
     // // console.log(url);
     // httpGetAsync(url, showResult);
+    showResult(data, 4);
 }
 
 function showResult(data, articlePerPage = 5) {
+    document.getElementById("home-page").style.display = "none";
     searchResults = document.getElementById("search-results");
     searchResults.innerHTML = '';
     pagination = document.getElementById("pagination");
@@ -141,10 +147,10 @@ function showResult(data, articlePerPage = 5) {
     paginationNavs = document.getElementsByClassName('page-link');
     if (paginationNavs.length > 1) {
         paginationNavs[0].addEventListener("click", () => {
-            if (currentPage > 0) goToPage(--currentPage);
+            if (currentPage > 0) goToPage(currentPage-1);
         });
         paginationNavs[paginationNavs.length - 1].addEventListener("click", () => {
-            if (currentPage + 1 > paginationNavs.length) goToPage(++currentPage);
+            if ((currentPage + 3) < paginationNavs.length) goToPage(currentPage+1);
         });
         for (let i = 1; i < paginationNavs.length - 1; i++) {
             paginationNavs[i].addEventListener("click", (e) => {
@@ -161,8 +167,5 @@ function goToPage(pageId) {
         pages[i].style.display = "none";
     }
     pages[pageId].style.display = "block";
-}
-
-function renderResult(data) {
-    
+    currentPage = pageId;
 }

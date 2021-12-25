@@ -1,3 +1,22 @@
+.body {
+    background-color: #cde9fe;
+    background-size: cover;
+}
+
+.navbar {
+    /* background-color: #fee3cd; */
+    background-color: #f2740d;
+}
+
+.btn {
+    background-color: #fee3cd;
+}
+
 .page-section {
+    background-color: transparent;
     margin: 2rem 3rem;
+}
+
+#home-page {
+    margin: 5rem 6rem;
 }
