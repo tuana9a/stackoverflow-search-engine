@@ -6,6 +6,7 @@ import com.tuana9a.config.AppConfig;
 import com.tuana9a.entities.NewsLetter;
 import com.tuana9a.entities.Result;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -25,6 +26,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -34,21 +36,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+//@AllArgsConstructor
+@NoArgsConstructor
 public class SearchEngineImpl implements SearchEngineService {
-
-    @Autowired
-    private AppConfig config;
 
     @Override
     public Directory getDirectory() throws IOException {
-        return FSDirectory.open(Paths.get(config.LUCENE_INDEXES_DIR));
+        return FSDirectory.open(Paths.get("./index/"));
     }
 
     @Override
     public EnglishAnalyzer getAnalyzer() {
         EnglishAnalyzer analyzer = new EnglishAnalyzer();
-        analyzer.getStopwordSet().add("'ve");
+//        analyzer.getStopwordSet().add("'ve");
         return analyzer;
     }
 
@@ -92,7 +92,6 @@ public class SearchEngineImpl implements SearchEngineService {
         Query query = parsers.parse(keyword);
 
         ScoreDoc[] hits = isearcher.search(query, limit).scoreDocs;
-
         List<Result> results = new ArrayList<>();
 
         for(int i = 0; i < hits.length; i++){
@@ -113,13 +112,14 @@ public class SearchEngineImpl implements SearchEngineService {
                     long docFrequency = ireader.docFreq(term);
                     tokenizedString+= " [" + term + " " + termFrequency + " " +docFrequency+ "]";
                 }
-                System.out.println();
                 tokenStream.end();
             }finally {
                 tokenStream.close();
             }
             result.setTokenizedString(tokenizedString);
+            results.add(result);
         }
+
         return results;
     }
 }
