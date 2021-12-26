@@ -9,6 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 
 @RestController
@@ -23,8 +26,16 @@ public class NewsLetterSearchController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> addDocuments(@RequestParam("file") MultipartFile file) throws ParseException, IOException {
+    public ResponseEntity<Object> addDocuments(@RequestParam("file") MultipartFile file, @RequestParam("create") Boolean create) throws ParseException, IOException {
+        Path folder = Paths.get("./src/main/resources/static/data");
         String fileName =  new Date().getTime() + "_" +file.getOriginalFilename();
+        try {
+            Files.copy(file.getInputStream(), folder.resolve(fileName));
+            File document = new File(fileName);
+            searchEngineService.addDocuments(document, create);
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body(e);
+        }
         return null;
     }
 
