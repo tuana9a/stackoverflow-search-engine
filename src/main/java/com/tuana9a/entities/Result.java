@@ -15,7 +15,7 @@ public class Result {
     String tokenizedString;
     public Result(Document document){
         this.title = document.get("title");
-        this.link = document.get("link");
+        this.link = document.get("url");
         this.content = document.get("content");
     }
 }
