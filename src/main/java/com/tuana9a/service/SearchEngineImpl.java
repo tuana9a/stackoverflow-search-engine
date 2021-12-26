@@ -36,13 +36,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-//@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor
 public class SearchEngineImpl implements SearchEngineService {
+    private AppConfig appConfig;
 
     @Override
     public Directory getDirectory() throws IOException {
-        return FSDirectory.open(Paths.get("./index/"));
+        return FSDirectory.open(Paths.get(appConfig.LUCENE_INDEXES_DIR));
     }
 
     @Override
