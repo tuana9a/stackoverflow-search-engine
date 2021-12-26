@@ -6,7 +6,6 @@ import com.tuana9a.config.AppConfig;
 import com.tuana9a.entities.NewsLetter;
 import com.tuana9a.entities.Result;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.en.EnglishAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -25,8 +24,6 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -48,7 +45,6 @@ public class SearchEngineImpl implements SearchEngineService {
     @Override
     public EnglishAnalyzer getAnalyzer() {
         EnglishAnalyzer analyzer = new EnglishAnalyzer();
-//        analyzer.getStopwordSet().add("'ve");
         return analyzer;
     }
 
