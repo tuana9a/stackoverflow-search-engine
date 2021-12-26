@@ -1,4 +1,4 @@
-const data = 
+const test =
     [
         {
             "document": {
@@ -90,7 +90,7 @@ function httpGetAsync(theUrl, callback) {
     var xmlHttp = new XMLHttpRequest();
     xmlHttp.onreadystatechange = function() { 
         if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
-            callback(xmlHttp.responseText);
+            callback(JSON.parse(xmlHttp.responseText), 10);
     }
     xmlHttp.open("GET", theUrl, true); // true for asynchronous 
     xmlHttp.send(null);
@@ -102,14 +102,15 @@ document.getElementById("search-form").addEventListener("submit", (e) => {
 })
 
 async function searchRequest() {
-    // query = document.getElementById("query").value;
-    // url = "http://localhost/api/newsletter/search?field=content&top=3&q=" + query;
-    // // console.log(url);
-    // httpGetAsync(url, showResult);
-    showResult(data, 4);
+    query = document.getElementById("query").value;
+    url = "http://localhost/api/search?q=" + query + "&limit=100";
+    console.log(url);
+    httpGetAsync(url, showResult);
+    // showResult(data, 4);
 }
 
 function showResult(data, articlePerPage = 5) {
+    console.log(data);
     document.getElementById("home-page").style.display = "none";
     searchResults = document.getElementById("search-results");
     searchResults.innerHTML = '';
@@ -118,7 +119,7 @@ function showResult(data, articlePerPage = 5) {
         pagination.innerHTML = `<li class="page-item"><a class="page-link" id="page-1" href="#">1</a></li>`;
         if (data.length > articlePerPage) {
             pagination.innerHTML = `<li class="page-item"><a class="page-link" id="page-prev" href="#">Previous</a></li>` + pagination.innerHTML;
-            
+
             var numPages = parseInt(data.length / articlePerPage);
             if (data.length % articlePerPage > 0) numPages++;
             for (let i = 1; i < numPages; i++) {
@@ -128,17 +129,16 @@ function showResult(data, articlePerPage = 5) {
             pagination.innerHTML += `<li class="page-item"><a class="page-link" id="page-next" href="#">Next</a></li>`
         }
     }
-    
+
     for (let i = 0; i < data.length; i++){
         if (i % articlePerPage == 0) searchResults.innerHTML += `<div class="result-page" id="result-page-${(i / articlePerPage) + 1}"></div>`
         document.getElementsByClassName('result-page')[document.getElementsByClassName('result-page').length -1].innerHTML += `
             <div class="row py-3">
-                <a class="text-decoration-none text-dark" href="${data[i].document.link}" target="_blank">
-                    <p>${data[i].document.link}</p>
-                    <h2>${data[i].document.title}</h2>
+                <a class="text-decoration-none text-dark" href="${data[i].link}" target="_blank">
+                    <p>${data[i].link}</p>
+                    <h2>${data[i].title}</h2>
                 </a>
-                <h5>Author - Date - ...</h5>
-                <p>${data[i].document.content.substring(0,300)}...</p>
+                <p>${data[i].content.substring(0,300)}...</p>
             </div>`
     }
 

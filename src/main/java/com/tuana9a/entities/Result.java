@@ -18,4 +18,6 @@ public class Result {
         this.link = document.get("link");
         this.content = document.get("content");
     }
-}
+    public void setTokenizedString(String tokenizedString) { this.tokenizedString = tokenizedString; };
+
+    }
