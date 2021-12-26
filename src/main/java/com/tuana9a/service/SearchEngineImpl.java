@@ -110,7 +110,7 @@ public class SearchEngineImpl implements SearchEngineService {
                     Term term = new Term("content", word);
                     long termFrequency = ireader.totalTermFreq(term);
                     long docFrequency = ireader.docFreq(term);
-                    tokenizedString+= " [" + term + " " + termFrequency + " " +docFrequency+ "]";
+                    tokenizedString+= " [" + word + " " + termFrequency + " " +docFrequency+ "]";
                 }
                 tokenStream.end();
             }finally {
