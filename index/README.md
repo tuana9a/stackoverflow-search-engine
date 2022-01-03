@@ -1,1 +1,0 @@
-là thư mục trong config cho lucene lưu index thành file

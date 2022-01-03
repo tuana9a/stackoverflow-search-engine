@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface SearchEngineService {
-    public Directory getDirectory() throws IOException;
+    public Directory getFSDirectory() throws IOException;
     public EnglishAnalyzer getAnalyzer();
     public void addDocuments(File file, boolean create) throws IOException;
     public List<Result> searchDocument(String keyword, int limit) throws IOException, ParseException;

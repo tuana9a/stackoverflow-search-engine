@@ -19,11 +19,11 @@ import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.queryparser.classic.ParseException;
 import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.*;
+import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.RAMDirectory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -38,7 +38,7 @@ public class SearchEngineImpl implements SearchEngineService {
     private AppConfig appConfig;
 
     @Override
-    public Directory getDirectory() throws IOException {
+    public Directory getFSDirectory() throws IOException {
         return FSDirectory.open(Paths.get(appConfig.LUCENE_INDEXES_DIR));
     }
 
@@ -56,7 +56,9 @@ public class SearchEngineImpl implements SearchEngineService {
         }else{
             indexWriterConfig.setOpenMode(IndexWriterConfig.OpenMode.APPEND);
         }
-        IndexWriter indexWriter = new IndexWriter(getDirectory(), indexWriterConfig);
+        ByteBuffersDirectory byteBuffersDirectory = new ByteBuffersDirectory();
+        Directory fsDirectory = getFSDirectory();
+        IndexWriter indexWriter = new IndexWriter(fsDirectory, indexWriterConfig);
 
         List<NewsLetter> newsLetters = new ObjectMapper().readValue(file, new TypeReference<List<NewsLetter>>() {
         });
@@ -78,14 +80,33 @@ public class SearchEngineImpl implements SearchEngineService {
 
     @Override
     public List<Result> searchDocument(String keyword, int limit) throws IOException, ParseException {
-        DirectoryReader ireader = DirectoryReader.open(getDirectory());
+        DirectoryReader ireader = DirectoryReader.open(getFSDirectory());
         IndexSearcher isearcher = new IndexSearcher(ireader);
 
         EnglishAnalyzer analyzer = getAnalyzer();
-        MultiFieldQueryParser parsers = new MultiFieldQueryParser(new String[]{"content","title"}, analyzer);
-        parsers.setDefaultOperator(QueryParser.Operator.OR);
 
-        Query query = parsers.parse(keyword);
+        TokenStream searchTokenStream = analyzer.tokenStream("content", keyword);
+        CharTermAttribute searchCharTermAttribute = searchTokenStream.addAttribute(CharTermAttribute.class);
+        BooleanQuery.Builder builder = new BooleanQuery.Builder();
+        BooleanQuery.Builder builder1 = new BooleanQuery.Builder();
+
+        try{
+            searchTokenStream.reset();
+            while(searchTokenStream.incrementToken()){
+                String word = searchCharTermAttribute.toString();
+                Term term = new Term("content", word);
+                TermQuery termQuery = new TermQuery(term);
+                builder.add(termQuery, BooleanClause.Occur.SHOULD);
+                builder1.add(termQuery, BooleanClause.Occur.MUST);
+            }
+            searchTokenStream.end();
+        }finally {
+            searchTokenStream.close();
+        }
+
+        builder.add(builder1.build(), BooleanClause.Occur.SHOULD);
+        Query query = builder.build();
+        System.out.println(query.toString());
 
         ScoreDoc[] hits = isearcher.search(query, limit).scoreDocs;
         List<Result> results = new ArrayList<>();
@@ -93,6 +114,7 @@ public class SearchEngineImpl implements SearchEngineService {
         for(int i = 0; i < hits.length; i++){
             Document hitDoc = isearcher.doc(hits[i].doc);
             Result result = new Result(hitDoc);
+            result.setScore(hits[i].score);
 
             TokenStream tokenStream = analyzer.tokenStream("content", hitDoc.get("content"));
 

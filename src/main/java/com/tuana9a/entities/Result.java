@@ -13,11 +13,16 @@ public class Result {
     String link;
     String content;
     String tokenizedString;
-    public Result(Document document){
+    Float score;
+
+    public Result(Document document) {
         this.title = document.get("title");
         this.link = document.get("url");
         this.content = document.get("content");
     }
-    public void setTokenizedString(String tokenizedString) { this.tokenizedString = tokenizedString; };
 
+    public void setTokenizedString(String tokenizedString) {
+        this.tokenizedString = tokenizedString;
     }
+
+}
