@@ -80,16 +80,14 @@ public class SearchEngineImpl implements SearchEngineService {
 
     @Override
     public List<Result> searchDocument(String keyword, int limit) throws IOException, ParseException {
-        DirectoryReader ireader = DirectoryReader.open(getFSDirectory());
-        IndexSearcher isearcher = new IndexSearcher(ireader);
+        DirectoryReader iReader = DirectoryReader.open(getFSDirectory());
+        IndexSearcher iSearcher = new IndexSearcher(iReader);
 
         EnglishAnalyzer analyzer = getAnalyzer();
 
         TokenStream searchTokenStream = analyzer.tokenStream("content", keyword);
         CharTermAttribute searchCharTermAttribute = searchTokenStream.addAttribute(CharTermAttribute.class);
         BooleanQuery.Builder builder = new BooleanQuery.Builder();
-        BooleanQuery.Builder builder1 = new BooleanQuery.Builder();
-
         try{
             searchTokenStream.reset();
             while(searchTokenStream.incrementToken()){
@@ -97,22 +95,20 @@ public class SearchEngineImpl implements SearchEngineService {
                 Term term = new Term("content", word);
                 TermQuery termQuery = new TermQuery(term);
                 builder.add(termQuery, BooleanClause.Occur.SHOULD);
-                builder1.add(termQuery, BooleanClause.Occur.MUST);
             }
             searchTokenStream.end();
         }finally {
             searchTokenStream.close();
         }
 
-        builder.add(builder1.build(), BooleanClause.Occur.SHOULD);
-        Query query = builder.build();
+        Query query = builder.setMinimumNumberShouldMatch(1).build();
         System.out.println(query.toString());
 
-        ScoreDoc[] hits = isearcher.search(query, limit).scoreDocs;
+        ScoreDoc[] hits = iSearcher.search(query, limit).scoreDocs;
         List<Result> results = new ArrayList<>();
 
         for(int i = 0; i < hits.length; i++){
-            Document hitDoc = isearcher.doc(hits[i].doc);
+            Document hitDoc = iSearcher.doc(hits[i].doc);
             Result result = new Result(hitDoc);
             result.setScore(hits[i].score);
 
@@ -126,8 +122,8 @@ public class SearchEngineImpl implements SearchEngineService {
                 while(tokenStream.incrementToken()){
                     String word = charTermAttribute.toString();
                     Term term = new Term("content", word);
-                    long termFrequency = ireader.totalTermFreq(term);
-                    long docFrequency = ireader.docFreq(term);
+                    long termFrequency = iReader.totalTermFreq(term);
+                    long docFrequency = iReader.docFreq(term);
                     tokenizedString+= " [" + word + " " + termFrequency + " " +docFrequency+ "]";
                 }
                 tokenStream.end();
